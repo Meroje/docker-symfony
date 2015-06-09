@@ -1,17 +1,15 @@
-docker-symfony
+docker-laravel
 ==============
 
-Just a litle Docker POC in order to have a complete stack for running Symfony into Docker containers using docker-compose tool.
+Just a litle Docker POC in order to have a complete stack for running Laravel into Docker containers using docker-compose tool.
 
 # Installation
 
 First, clone this repository:
 
 ```bash
-$ git clone git@github.com:eko/docker-symfony.git
+$ git clone --recursive git@github.com:meroje/laravel-realtime.git
 ```
-
-Next, put your Symfony application into `symfony` folder and do not forget to add `symfony.dev` in your `/etc/hosts` file.
 
 Then, run:
 
@@ -19,21 +17,21 @@ Then, run:
 $ docker-compose up
 ```
 
-You are done, you can visite your Symfony application on the following URL: `http://symfony.dev` (and access Kibana on `http://symfony.dev:81`)
+You are done, you can visite your Laravel application on the following URL: `http://localhost` (and access Kibana on `http://localhost:81`)
 
 Optionally, you can build your Docker images separately by running:
 
 ```bash
-$ docker build -t symfony/code code
-$ docker build -t symfony/php-fpm php-fpm
-$ docker build -t symfony/nginx nginx
+$ docker build -t laravel/code code
+$ docker build -t laravel/php-fpm php-fpm
+$ docker build -t laravel/nginx nginx
 ```
 
 # How it works?
 
 Here are the `docker-compose` built images:
 
-* `application`: This is the Symfony application code container,
+* `application`: This is the Laravel application code container,
 * `db`: This is the MySQL database container (can be changed to postgresql or whatever in `docker-compose.yml` file),
 * `php`: This is the PHP-FPM container in which the application volume is mounted,
 * `nginx`: This is the Nginx webserver container in which application volume is mounted too,
@@ -54,11 +52,11 @@ This results in the following running containers:
 
 # Read logs
 
-You can access Nginx and Symfony application logs in the following directories into your host machine:
+You can access Nginx and Laravel application logs in the following directories into your host machine:
 
 * `logs/nginx`
-* `logs/symfony`
+* `logs/laravel`
 
 # Use Kibana!
 
-You can also use Kibana to visualize Nginx & Symfony logs by visiting `http://symfony.dev:81`.
+You can also use Kibana to visualize Nginx & Laravel logs by visiting `http://localhost:81`.

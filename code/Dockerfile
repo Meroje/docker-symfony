@@ -1,5 +1,3 @@
-FROM debian:jessie
+FROM tianon/true
 
-MAINTAINER Vincent Composieux <vincent.composieux@gmail.com>
-
-VOLUME /var/www/symfony
+VOLUME /var/www/laravel

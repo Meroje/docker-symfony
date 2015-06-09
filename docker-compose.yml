@@ -1,8 +1,21 @@
-application:
-    image: symfony/code
+ambassador:
+    image: cpuguy83/docker-grand-ambassador
     volumes:
-        - symfony:/var/www/symfony
-        - logs/symfony:/var/www/symfony/app/logs
+        - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "-name laravelrealtime_nginx_1 -name laravelrealtime_php_1 "
+redis:
+    image: tutum/redis
+    ports:
+        - 6379:6379
+    environment:
+        REDIS_PASS: "**None**"
+        REDIS_APPENDONLY: "yes"
+        REDIS_APPENDFSYNC: everysec
+application:
+    build: ./code
+    volumes:
+        - code/laravel:/var/www/laravel
+        - logs/laravel:/var/www/laravel/storage/logs
     tty: true
 db:
     image: mysql
@@ -10,23 +23,43 @@ db:
         - 3306:3306
     environment:
         MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: symfony
-        MYSQL_USER: root
-        MYSQL_PASSWORD: root
+        MYSQL_DATABASE: laravel
+        MYSQL_USER: homestead
+        MYSQL_PASSWORD: secret
 php:
-    image: symfony/php-fpm
+    build: ./php-fpm
     expose:
         - 9000:9000
     volumes_from:
         - application
     links:
         - db
+        - redis
+        - ambassador:nginx
+queuelisten:
+    build: ./artisan
+    volumes_from:
+        - application
+    links:
+        - db
+        - redis
+        - ambassador:nginx
+    command: "queue:listen"
+queueworker:
+    build: ./artisan
+    volumes_from:
+        - application
+    links:
+        - db
+        - redis
+        - ambassador:nginx
+    command: "queue:work connection --daemon --tries=3"
 nginx:
-    image: symfony/nginx
+    build: ./nginx
     ports:
         - 80:80
     links:
-        - php
+        - ambassador:php
     volumes_from:
         - application
     volumes:
