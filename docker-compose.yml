@@ -36,6 +36,8 @@ php:
         - db
         - redis
         - ambassador:nginx
+artisan:
+    build: ./artisan
 queuelisten:
     build: ./artisan
     volumes_from:
