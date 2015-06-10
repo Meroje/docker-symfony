@@ -1258,9 +1258,11 @@
 (function (window, document, undefined) {
     "use strict";
     function messageReceived(text, id, channel) {
-        text = JSON.parse(text);
-        document.getElementById("messages").innerHTML += id + ": " + text.text + "<br>";
-    };
+        var objDiv = document.getElementById("messages");
+        var text = JSON.parse(text);
+        objDiv.innerHTML += id + ": " + text.text + "<br>";
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
 
     function ready(fn) {
         if (document.readyState != "loading") {
