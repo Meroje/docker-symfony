@@ -5,7 +5,7 @@ ambassador:
     command: "-name laravelrealtime_nginx_1 -name laravelrealtime_php_1 "
 redis:
     image: tutum/redis
-    ports:
+    expose:
         - 6379:6379
     environment:
         REDIS_PASS: "**None**"
@@ -14,12 +14,12 @@ redis:
 application:
     build: ./code
     volumes:
-        - code/laravel:/var/www/laravel
-        - logs/laravel:/var/www/laravel/storage/logs
+        - ./code/laravel:/var/www/laravel
+        - ./logs/laravel:/var/www/laravel/storage/logs
     tty: true
 db:
     image: mysql
-    ports:
+    expose:
         - 3306:3306
     environment:
         MYSQL_ROOT_PASSWORD: root
@@ -65,14 +65,14 @@ nginx:
     volumes_from:
         - application
     volumes:
-        - logs/nginx/:/var/log/nginx
+        - ./logs/nginx/:/var/log/nginx
 elk:
     image: willdurand/elk
     ports:
         - 81:80
     volumes:
-        - elk/logstash:/etc/logstash
-        - elk/logstash/patterns:/opt/logstash/patterns
+        - ./elk/logstash:/etc/logstash
+        - ./elk/logstash/patterns:/opt/logstash/patterns
     volumes_from:
         - application
         - php
